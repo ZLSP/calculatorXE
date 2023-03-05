@@ -94,4 +94,7 @@ dependencies {
     implementation "org.orbit-mvi:orbit-core:$orbitVersion"
     implementation "org.orbit-mvi:orbit-viewmodel:$orbitVersion"
     implementation "org.orbit-mvi:orbit-compose:$orbitVersion"
+
+    //Timber
+    implementation("com.jakewharton.timber:timber:4.7.1")
 }

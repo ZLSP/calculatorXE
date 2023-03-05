@@ -1,4 +1,4 @@
-package com.zlsp.calcxe
+package com.zlsp.calcxe.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
