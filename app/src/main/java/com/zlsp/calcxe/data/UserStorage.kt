@@ -1,15 +1,15 @@
 package com.zlsp.calcxe.data
 
-import android.content.Context
+import android.content.SharedPreferences
 import com.zlsp.calcxe.base.Constants
-import com.zlsp.calcxe.domain.UserSetupSettings
+import com.zlsp.calcxe.domain.UserSettings
 import com.zlsp.calcxe.ui.theme.ColorScheme
 import com.zlsp.calcxe.ui.theme.ThemeMode
+import javax.inject.Inject
 
-class SharedPreferenceManager(context: Context) {
+class UserStorage @Inject constructor(private val pref: SharedPreferences) {
 
     companion object {
-        const val SETTINGS_PREFERENCES = "SettingsPreferences"
         const val KEY_THEME_MODE = "themeMode"
         const val KEY_COLOR_SCHEME = "colorScheme"
         const val KEY_DEFAULT_XE = "defaultXe"
@@ -17,29 +17,27 @@ class SharedPreferenceManager(context: Context) {
         const val DEFAULT_XE = 10
     }
 
-    private val pref = context.getSharedPreferences(SETTINGS_PREFERENCES, Context.MODE_PRIVATE)
-
     private val colorScheme: ColorScheme
         get() = getColorScheme(pref.getInt(KEY_COLOR_SCHEME, 0))
 
     private val themeMode: ThemeMode
         get() = getThemeMode(pref.getInt(KEY_THEME_MODE, 0))
 
-    private val defaultXE : Int
+    private val defaultXE: Int
         get() = pref.getInt(KEY_DEFAULT_XE, DEFAULT_XE)
 
-    fun getUserSetupSettings(): UserSetupSettings {
-        return UserSetupSettings(
+    fun getUserSetupSettings(): UserSettings {
+        return UserSettings(
             defaultXE = defaultXE,
             themeMode = themeMode,
             colorScheme = colorScheme
         )
     }
 
-    fun updateSettings(userSetupSettings: UserSetupSettings) {
-        setDataPref(KEY_DEFAULT_XE, userSetupSettings.defaultXE)
-        setDataPref(KEY_COLOR_SCHEME, userSetupSettings.colorScheme.id)
-        setDataPref(KEY_THEME_MODE, userSetupSettings.themeMode.id)
+    fun updateSettings(userSettings: UserSettings) {
+        setDataPref(KEY_DEFAULT_XE, userSettings.defaultXE)
+        setDataPref(KEY_COLOR_SCHEME, userSettings.colorScheme.id)
+        setDataPref(KEY_THEME_MODE, userSettings.themeMode.id)
     }
 
     fun isShowAd(): Boolean {
@@ -49,7 +47,7 @@ class SharedPreferenceManager(context: Context) {
             setDataPref(KEY_FULL_AD, 1)
             true
         } else {
-            setDataPref(KEY_FULL_AD, numAd+1)
+            setDataPref(KEY_FULL_AD, numAd + 1)
             false
         }
     }
