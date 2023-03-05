@@ -19,13 +19,13 @@ class SharedPreferenceManager(context: Context) {
 
     private val pref = context.getSharedPreferences(SETTINGS_PREFERENCES, Context.MODE_PRIVATE)
 
-    val colorScheme: ColorScheme
+    private val colorScheme: ColorScheme
         get() = getColorScheme(pref.getInt(KEY_COLOR_SCHEME, 0))
 
-    val themeMode: ThemeMode
+    private val themeMode: ThemeMode
         get() = getThemeMode(pref.getInt(KEY_THEME_MODE, 0))
 
-    val defaultXE : Int
+    private val defaultXE : Int
         get() = pref.getInt(KEY_DEFAULT_XE, DEFAULT_XE)
 
     fun getUserSetupSettings(): UserSetupSettings {

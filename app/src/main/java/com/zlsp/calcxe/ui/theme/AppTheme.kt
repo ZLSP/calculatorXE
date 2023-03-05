@@ -8,7 +8,7 @@ import androidx.compose.ui.graphics.Color
 import com.zlsp.calcxe.base.switch
 
 @Composable
-fun CalcXETheme(
+fun AppTheme(
     themeMode: ThemeMode = ThemeMode.DARK,
     colorScheme: ColorScheme = ColorScheme.GREEN,
     content: @Composable () -> Unit
