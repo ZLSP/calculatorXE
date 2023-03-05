@@ -7,7 +7,7 @@ interface MainContract {
         object Navigate: Effect
     }
     sealed interface Event{
-
+        object UpdateConfig: Event
     }
     data class State(
         val products: List<String>,

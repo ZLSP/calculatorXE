@@ -1,4 +1,4 @@
-package com.zlsp.calcxe.ui.content
+package com.zlsp.calcxe.ui
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -17,17 +18,23 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.zlsp.calcxe.main.MainContract
 import com.zlsp.calcxe.navigation.Screen
+import com.zlsp.calcxe.ui.screens.settings.SettingsContract
+import com.zlsp.calcxe.ui.screens.settings.SettingsScreen
+import com.zlsp.calcxe.ui.screens.settings.SettingsViewModel
+import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 fun MainContent(
     navHostController: NavHostController = rememberNavController(),
-    sendEvent: (MainContract.Event) -> Unit
+    sendGlobalEvent: (MainContract.Event) -> Unit
 ) {
     Scaffold(
-        bottomBar = { AppBottomBar (navHostController)}
-    ) {
+        backgroundColor = MaterialTheme.colors.background,
+        bottomBar = { AppBottomBar(navHostController) }
+    ) { scaffoldPadding ->
         NavHost(
-            modifier = Modifier.padding(it),
+            modifier = Modifier.padding(scaffoldPadding),
             navController = navHostController,
             startDestination = Screen.HOME.route
         ) {
@@ -35,7 +42,15 @@ fun MainContent(
 
             }
             composable(Screen.SETTINGS.route) {
-
+                val viewModel = hiltViewModel<SettingsViewModel>()
+                val state by viewModel.collectAsState()
+                viewModel.collectSideEffect { effect ->
+                    when (effect) {
+                        SettingsContract.Effect.UpdateConfiguration ->
+                            sendGlobalEvent(MainContract.Event.UpdateConfig)
+                    }
+                }
+                SettingsScreen(state, viewModel::sendEvent)
             }
             composable(Screen.LIST.route) {
 

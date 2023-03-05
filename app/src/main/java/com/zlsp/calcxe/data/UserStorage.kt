@@ -12,7 +12,7 @@ class UserStorage @Inject constructor(private val pref: SharedPreferences) {
     companion object {
         const val KEY_THEME_MODE = "themeMode"
         const val KEY_COLOR_SCHEME = "colorScheme"
-        const val KEY_DEFAULT_XE = "defaultXe"
+        const val KEY_NUM_ONE_XE = "defaultXe"
         const val KEY_FULL_AD = "full_ad"
         const val DEFAULT_XE = 10
     }
@@ -24,20 +24,26 @@ class UserStorage @Inject constructor(private val pref: SharedPreferences) {
         get() = getThemeMode(pref.getInt(KEY_THEME_MODE, 0))
 
     private val defaultXE: Int
-        get() = pref.getInt(KEY_DEFAULT_XE, DEFAULT_XE)
+        get() = pref.getInt(KEY_NUM_ONE_XE, DEFAULT_XE)
 
     fun getUserSetupSettings(): UserSettings {
         return UserSettings(
-            defaultXE = defaultXE,
+            numOneXe = defaultXE,
             themeMode = themeMode,
             colorScheme = colorScheme
         )
     }
 
-    fun updateSettings(userSettings: UserSettings) {
-        setDataPref(KEY_DEFAULT_XE, userSettings.defaultXE)
-        setDataPref(KEY_COLOR_SCHEME, userSettings.colorScheme.id)
-        setDataPref(KEY_THEME_MODE, userSettings.themeMode.id)
+    fun updateThemeMode(themeMode: ThemeMode) {
+        setDataPref(KEY_THEME_MODE, themeMode.id)
+    }
+
+    fun updateColorScheme(colorScheme: ColorScheme) {
+        setDataPref(KEY_COLOR_SCHEME, colorScheme.id)
+    }
+
+    fun updateNumOneXe(numOneXe: Int) {
+        setDataPref(KEY_NUM_ONE_XE, numOneXe)
     }
 
     fun isShowAd(): Boolean {

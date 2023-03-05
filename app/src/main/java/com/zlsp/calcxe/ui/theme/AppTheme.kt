@@ -18,9 +18,10 @@ fun AppTheme(
     content: @Composable () -> Unit
 ) {
     val colors = colorScheme.set.getPalette(themeMode)
+    val systemBarsColor = colors.switch().background
     SideEffect {
         systemUiController.setSystemBarsColor(
-            color = colors.background,
+            color = systemBarsColor,
             darkIcons = themeMode == ThemeMode.LIGHT
         )
     }

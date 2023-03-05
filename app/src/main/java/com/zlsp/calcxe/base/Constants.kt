@@ -13,4 +13,6 @@ object Constants {
     const val THEME_MODE_LIGHT = 0
     const val THEME_MODE_DARK = 1
     const val THEME_MODE_AMOLED = 2
+
+    const val PADDING_SCREEN = 20
 }

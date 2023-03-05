@@ -11,3 +11,7 @@ fun Colors.switch() = this.copy(
     background = animateColor(targetColor = this.background),
     surface = animateColor(targetColor = this.surface)
 )
+
+fun Any.printHashCode() {
+    println(this.hashCode())
+}
