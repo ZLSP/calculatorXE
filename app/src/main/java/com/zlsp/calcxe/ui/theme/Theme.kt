@@ -1,44 +1,31 @@
 package com.zlsp.calcxe.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-
-private val DarkColorPalette = darkColors(
-    primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = Teal200
-)
-
-private val LightColorPalette = lightColors(
-    primary = Purple500,
-    primaryVariant = Purple700,
-    secondary = Teal200
-
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
-)
+import androidx.compose.ui.graphics.Color
+import com.zlsp.calcxe.base.switch
 
 @Composable
-fun CalcXETheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
-    } else {
-        LightColorPalette
-    }
+fun CalcXETheme(
+    themeMode: ThemeMode = ThemeMode.DARK,
+    colorScheme: ColorScheme = ColorScheme.GREEN,
+    content: @Composable () -> Unit
+) {
+    val colors = colorScheme.set.getPalette(themeMode)
 
     MaterialTheme(
-        colors = colors,
+        colors = colors.switch(),
         typography = Typography,
         shapes = Shapes,
         content = content
     )
 }
+
+@Composable
+fun animateColor(targetColor: Color) =
+    animateColorAsState(
+        targetValue = targetColor,
+        animationSpec = tween(durationMillis = 1000)
+    ).value
