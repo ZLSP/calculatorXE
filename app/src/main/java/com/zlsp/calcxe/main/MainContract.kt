@@ -7,7 +7,7 @@ interface MainContract {
         object Navigate: Effect
     }
     sealed interface Event{
-        class OnClickBottomBar(route: String)
+
     }
     data class State(
         val products: List<String>,
