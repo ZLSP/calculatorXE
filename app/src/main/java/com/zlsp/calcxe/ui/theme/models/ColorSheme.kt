@@ -1,8 +1,8 @@
-package com.zlsp.calcxe.ui.theme
+package com.zlsp.calcxe.ui.theme.models
 
 import com.zlsp.calcxe.base.Constants
 
-enum class ColorScheme(val id: Int, val set: AppPaletteSet) {
+enum class ColorScheme(val id: Int, val paletteSet: AppPaletteSet) {
     GREEN(Constants.COLOR_SCHEME_GREEN, AppPallet.greenSet),
     PINK(Constants.COLOR_SCHEME_PINK, AppPallet.pinkSet),
     PURPLE(Constants.COLOR_SCHEME_PURPLE, AppPallet.purpleSet),

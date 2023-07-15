@@ -3,11 +3,11 @@ package com.zlsp.calcxe.main
 import com.zlsp.calcxe.base.BaseViewModel
 import com.zlsp.calcxe.data.repositories.theme.ThemeRepository
 import com.zlsp.calcxe.domain.UserSettings
-import com.zlsp.calcxe.main.MainContract.*
+import com.zlsp.calcxe.main.MainContract.Effect
+import com.zlsp.calcxe.main.MainContract.Event
+import com.zlsp.calcxe.main.MainContract.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
-import org.orbitmvi.orbit.syntax.simple.intent
-import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
@@ -25,12 +25,5 @@ class MainViewModel @Inject constructor(private val themeRepository: ThemeReposi
         )
     )
 
-    override fun sendEvent(event: Event) {
-        when (event) {
-            Event.UpdateConfig -> intent { reduce {
-                println(userSettings)
-                state.copy(userSettings = userSettings)
-            } }
-        }
-    }
+    override fun sendEvent(event: Event) {}
 }

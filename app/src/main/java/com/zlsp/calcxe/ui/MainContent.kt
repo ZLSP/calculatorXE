@@ -1,7 +1,12 @@
 package com.zlsp.calcxe.ui
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -16,18 +21,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.zlsp.calcxe.main.MainContract
 import com.zlsp.calcxe.navigation.Screen
-import com.zlsp.calcxe.ui.screens.settings.SettingsContract
 import com.zlsp.calcxe.ui.screens.settings.SettingsScreen
 import com.zlsp.calcxe.ui.screens.settings.SettingsViewModel
 import org.orbitmvi.orbit.compose.collectAsState
-import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 fun MainContent(
     navHostController: NavHostController = rememberNavController(),
-    sendGlobalEvent: (MainContract.Event) -> Unit
 ) {
     Scaffold(
         backgroundColor = MaterialTheme.colors.background,
@@ -44,12 +45,6 @@ fun MainContent(
             composable(Screen.SETTINGS.route) {
                 val viewModel = hiltViewModel<SettingsViewModel>()
                 val state by viewModel.collectAsState()
-                viewModel.collectSideEffect { effect ->
-                    when (effect) {
-                        SettingsContract.Effect.UpdateConfiguration ->
-                            sendGlobalEvent(MainContract.Event.UpdateConfig)
-                    }
-                }
                 SettingsScreen(state, viewModel::sendEvent)
             }
             composable(Screen.LIST.route) {

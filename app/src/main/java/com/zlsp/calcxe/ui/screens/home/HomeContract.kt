@@ -1,7 +1,7 @@
 package com.zlsp.calcxe.ui.screens.home
 
-import com.zlsp.calcxe.ui.theme.ColorScheme
-import com.zlsp.calcxe.ui.theme.ThemeMode
+import com.zlsp.calcxe.ui.theme.models.ColorScheme
+import com.zlsp.calcxe.ui.theme.models.ThemeMode
 
 interface HomeContract {
     sealed interface Effect {

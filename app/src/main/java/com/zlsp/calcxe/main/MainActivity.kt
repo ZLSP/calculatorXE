@@ -17,11 +17,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             val viewModel = hiltViewModel<MainViewModel>()
             val state by viewModel.collectAsState()
-            val sendGlobalEvent = viewModel::sendEvent
             AppTheme(
                 themeMode = state.userSettings.themeMode,
                 colorScheme = state.userSettings.colorScheme,
-                content = { MainContent { sendGlobalEvent(it) } }
+                content = { MainContent() }
             )
         }
     }

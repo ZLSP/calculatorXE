@@ -3,13 +3,36 @@ package com.zlsp.calcxe.ui.screens.settings
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Checkbox
+import androidx.compose.material.CheckboxDefaults
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -23,8 +46,9 @@ import com.zlsp.calcxe.base.Constants
 import com.zlsp.calcxe.base.printHashCode
 import com.zlsp.calcxe.base.switch
 import com.zlsp.calcxe.ui.theme.AppTheme
-import com.zlsp.calcxe.ui.theme.ColorScheme
-import com.zlsp.calcxe.ui.theme.ThemeMode
+import com.zlsp.calcxe.ui.theme.LocalThemeHandler
+import com.zlsp.calcxe.ui.theme.models.ColorScheme
+import com.zlsp.calcxe.ui.theme.models.ThemeMode
 
 private const val PADDING_VIEW = 10
 
@@ -48,13 +72,15 @@ fun SettingsScreen(
         ViewSettingsItemCheckbox(
             nameId = R.string.settingsDarkMode,
             isCheck = state.themeMode == ThemeMode.DARK || state.themeMode == ThemeMode.AMOLED,
-            onClick = { sendEvent(SettingsContract.Event.OnClickCheckBoxDarkTheme(it)) }
+            themeMode = ThemeMode.DARK,
+            onClick = { sendEvent(SettingsContract.Event.OnClickCheckBoxThemeMode(it)) }
         )
         Spacer(Modifier.height(PADDING_VIEW.dp))
         ViewSettingsItemCheckbox(
             nameId = R.string.settingsAmoledMode,
             isCheck = state.themeMode == ThemeMode.AMOLED,
-            onClick = { sendEvent(SettingsContract.Event.OnClickCheckBoxAmoledTheme(it)) }
+            themeMode = ThemeMode.AMOLED,
+            onClick = { sendEvent(SettingsContract.Event.OnClickCheckBoxThemeMode(it)) }
         )
         Spacer(Modifier.height(PADDING_VIEW.dp))
         ViewTitle(R.string.settingsTitleColorScheme)
@@ -87,11 +113,10 @@ private fun ViewColorSchemes(
             )
         )
     }
-    val gridState = rememberLazyGridState()
+    val themeHandler = LocalThemeHandler.current
     LazyVerticalGrid(
         columns = GridCells.Fixed(count = 4),
         verticalArrangement = Arrangement.spacedBy(10.dp),
-        state = gridState,
         content = {
             items(
                 items = listSchemes,
@@ -102,6 +127,7 @@ private fun ViewColorSchemes(
                     themeMode = themeMode,
                     isActive = it == colorSchemeActive
                 ) {
+                    themeHandler.setColorScheme(it)
                     onClickItem(it)
                 }
             }
@@ -117,12 +143,12 @@ private fun ColorBox(
     onClick: () -> Unit
 ) {
     Box {
-        Button (
+        Button(
             modifier = Modifier
                 .size(50.dp)
                 .align(Alignment.Center),
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = colorScheme.set.getPalette(themeMode).switch().primary
+                backgroundColor = colorScheme.paletteSet.getPalette(themeMode).switch().primary
             ),
             contentPadding = PaddingValues(0.dp),
             onClick = onClick
@@ -133,7 +159,7 @@ private fun ColorBox(
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_check),
                     contentDescription = "",
-                    tint = colorScheme.set.getPalette(themeMode).switch().onPrimary
+                    tint = colorScheme.paletteSet.getPalette(themeMode).switch().onPrimary
                 )
             }
         }
@@ -145,8 +171,10 @@ private fun ColorBox(
 private fun ViewSettingsItemCheckbox(
     @StringRes nameId: Int,
     isCheck: Boolean,
-    onClick: (Boolean) -> Unit
+    themeMode: ThemeMode,
+    onClick: (ThemeMode) -> Unit
 ) {
+    val themeHandler = LocalThemeHandler.current
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
             modifier = Modifier.weight(1f),
@@ -157,7 +185,21 @@ private fun ViewSettingsItemCheckbox(
         Checkbox(
             modifier = Modifier.weight(1f),
             checked = isCheck,
-            onCheckedChange = onClick,
+            onCheckedChange = {
+                val newThemeMode = when (themeMode) {
+                    ThemeMode.DARK -> {
+                        if (it) ThemeMode.DARK else ThemeMode.LIGHT
+                    }
+
+                    ThemeMode.AMOLED -> {
+                        if (it) ThemeMode.AMOLED else ThemeMode.DARK
+                    }
+
+                    else -> ThemeMode.LIGHT
+                }
+                onClick(newThemeMode)
+                themeHandler.setThemeMode(newThemeMode)
+            },
             colors = CheckboxDefaults.colors(
                 checkedColor = MaterialTheme.colors.primary,
                 checkmarkColor = MaterialTheme.colors.onPrimary,

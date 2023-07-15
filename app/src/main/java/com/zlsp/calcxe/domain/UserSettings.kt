@@ -1,7 +1,7 @@
 package com.zlsp.calcxe.domain
 
-import com.zlsp.calcxe.ui.theme.ColorScheme
-import com.zlsp.calcxe.ui.theme.ThemeMode
+import com.zlsp.calcxe.ui.theme.models.ColorScheme
+import com.zlsp.calcxe.ui.theme.models.ThemeMode
 
 data class UserSettings(
     val numOneXe: Int,
